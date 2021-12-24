@@ -1,7 +1,8 @@
 package com.bocobi.back.models;
 
 import javax.persistence.*;
-
+@Table
+@Entity
 public class Vaccin {
     @Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

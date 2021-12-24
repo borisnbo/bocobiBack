@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.bocobi.back.models.Role;
 import com.bocobi.back.models.User;
@@ -22,6 +23,7 @@ import com.bocobi.back.repos.UserRepos;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@CrossOrigin
 @Service @RequiredArgsConstructor @Transactional @Slf4j
 public class UserServiceImple implements UserService, UserDetailsService {
 

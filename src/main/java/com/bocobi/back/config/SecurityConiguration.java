@@ -1,6 +1,8 @@
 package com.bocobi.back.config;
 
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +18,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.bocobi.back.filter.CostumAuthorizationFilter;
 import com.bocobi.back.filter.CustomAuthenticationFilter;
@@ -28,6 +33,7 @@ import lombok.NoArgsConstructor;
 @EnableWebSecurity
 @NoArgsConstructor
 @AllArgsConstructor
+@CrossOrigin
 public class SecurityConiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -52,18 +58,24 @@ public class SecurityConiguration extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 		// In Database
 	}
-
-
+    
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
+		
+        http.cors().configurationSource(new CorsConfigurationSource() {
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                return new CorsConfiguration().applyPermitDefaultValues();
+            }
+        });
+		
 		authenticationFilter.setFilterProcessesUrl("/api/login");
 		http.csrf().disable();
-		http.cors().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-		http.authorizeRequests().antMatchers("/api/login/**").permitAll(); 
-		http.authorizeRequests().antMatchers("/api/init/**").permitAll(); 
+		http.cors().and().authorizeRequests().antMatchers("/api/login/**").permitAll(); 
+		http.cors().and().authorizeRequests().antMatchers("/api/init/**").permitAll(); 
 		
 		http.authorizeRequests().antMatchers(HttpMethod.GET,"api/users/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN"); 
 		http.authorizeRequests().antMatchers(HttpMethod.POST,"api/users/**").hasAnyAuthority("ROLE_ADMIN"); 

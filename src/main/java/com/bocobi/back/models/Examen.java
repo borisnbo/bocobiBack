@@ -1,7 +1,8 @@
 package com.bocobi.back.models;
 
 import javax.persistence.*;
-
+@Table
+@Entity
 public class Examen {
     
 	@Id

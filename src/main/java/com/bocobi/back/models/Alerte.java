@@ -1,7 +1,8 @@
 package com.bocobi.back.models;
 
 import javax.persistence.*;
-
+@Entity
+@Table
 public class Alerte {
     
 	@Id
